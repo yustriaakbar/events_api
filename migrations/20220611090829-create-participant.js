@@ -20,7 +20,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       nik: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       birthdate: {
         type: Sequelize.DATE

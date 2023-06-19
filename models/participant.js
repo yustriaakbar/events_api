@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     event_id: DataTypes.INTEGER,
     full_name: DataTypes.STRING,
-    nik: DataTypes.INTEGER,
+    nik: DataTypes.STRING,
     birthdate: DataTypes.DATE,
     address: DataTypes.STRING,
     email: DataTypes.STRING,
