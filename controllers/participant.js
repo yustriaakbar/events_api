@@ -1,8 +1,10 @@
 const Event = require('../models').Event;
 const Participant = require('../models').Participant;
 const responseData = require("../helpers/response-data");
+const sendMail = require("../helpers/send-mail");
 const db = require('../models/index');
 const Op = db.Sequelize.Op;
+const moment = require('moment');
 
 module.exports = {
 
@@ -68,7 +70,15 @@ module.exports = {
       });
   },
 
-  store(req, res) {
+  async store(req, res) {
+    const event = await Event.findByPk(req.body.event_id);
+    const eventData = {
+      'name' : req.body.full_name,
+      'date' : moment(event.date).locale("id").format("dddd, DD MMMM YYYY"),
+      'hours' : event.hours,
+      'location' : event.location,
+    };
+
     return Participant
       .create({
         event_id: req.body.event_id,
@@ -76,16 +86,18 @@ module.exports = {
         nik: req.body.nik,
         birthdate: req.body.birthdate,
         address: req.body.address,
-        // phone: req.body.phone,
+        phone: req.body.phone,
         email: req.body.email,
         gender: req.body.gender,
       })
       .then((participant) => {
+        sendMail.sendMail(req.body.email, eventData);
         responseData.success(res, 201, "Success", participant);
       })
       .catch((error) => {
         return responseData.error(res, 400, error);
       });
+      
   },
 
   update(req, res) {
